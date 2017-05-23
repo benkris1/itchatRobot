@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
 import json
+import re
 
 __author__ = 'ben'
 import logging
@@ -113,7 +114,8 @@ def add_friend(msg):
 def text_reply(msg):
     #logger.info(json.dumps(msg).decode("unicode_escape"))
     if msg['isAt'] and myRobot.online:
-        reply = tuLing.reply(msg['Content'])
+        match = re.match("@\S+\s+?(.*)",msg['Content'])
+        reply = tuLing.reply(match.group(0) if match else msg['Content'])
         logger.info(u"%s group %s msg :[%s],reply:[%s]",msg["User"].get("NickName"),msg['ActualNickName'],msg["Text"],reply)
         itchat.send(u'@%s\u2005 🤖: %s' % (msg['ActualNickName'], reply), msg['FromUserName'])
 
@@ -128,5 +130,3 @@ if __name__ == "__main__":
     itchat.auto_login(hotReload=True)
     itchat.run()
     #itchat.set_logging(showOnCmd=True,loggingFile="robot.log",loggingLevel=logging.DEBUG)
-
-
