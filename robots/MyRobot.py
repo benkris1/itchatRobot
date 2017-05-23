@@ -53,6 +53,7 @@ class TuLingReply(object) :
 
 class MyReply(object):
     online = False
+    groupOnline = True
     nickName = u"当时汗就来了"
     tuLing = TuLingReply()
     def __init__(self):
@@ -68,9 +69,11 @@ class MyReply(object):
         if text == "ip":
             return self.__get_ip()
         elif text == "up":
+            logger.info("my robot is going up")
             self.online = True
             return "success"
         elif text == "down":
+            logger.info("my robot is going down")
             self.online = False
             return "success"
         else:
@@ -88,7 +91,7 @@ def text_reply(msg):
     #logger.info("online %s" % myRobot.online)
     reply = None
     #logger.info(json.dumps(msg).decode("unicode_escape"))
-    if myRobot.isMySelf(msg) :
+    if myRobot.isMySelf(msg):
         return myRobot.reply(msg)
     elif myRobot.online:
         defaultReply = u"暂时离线状态,如有急事请尝试其他联系方式"
@@ -115,9 +118,11 @@ def add_friend(msg):
 @itchat.msg_register(TEXT, isGroupChat=True)
 def text_reply(msg):
     #logger.info(json.dumps(msg).decode("unicode_escape"))
-    if msg['isAt'] and myRobot.online:
+    if msg['isAt'] and myRobot.groupOnline:
         match = re.match("@\S+\s+?(.*)",msg['Content'])
-        reply = tuLing.reply(match.group(1) if match else msg['Content'])
+        temp = match.group(1) if match else msg['Content']
+        logger.info(temp)
+        reply = tuLing.reply(temp)
         logger.info(u"%s group %s msg :[%s],reply:[%s]",msg["User"].get("NickName"),msg['ActualNickName'],msg["Text"],reply)
         itchat.send(u'@%s\u2005 🤖: %s' % (msg['ActualNickName'], reply), msg['FromUserName'])
 
