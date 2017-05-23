@@ -1,4 +1,6 @@
 # -*- coding: utf8 -*-
+import json
+
 __author__ = 'ben'
 import logging
 from itchat.content import *
@@ -82,19 +84,19 @@ myRobot = MyReply()
 
 @itchat.msg_register([TEXT, MAP, CARD, NOTE, SHARING])
 def text_reply(msg):
-    logger.info("online %s" % myRobot.online)
+    #logger.info("online %s" % myRobot.online)
+    reply = None
     #logger.info(json.dumps(msg).decode("unicode_escape"))
     if myRobot.isMySelf(msg) :
-        return myRobot.reply(msg)
+        reply = myRobot.reply(msg)
     elif myRobot.online:
         defaultReply = u"暂时离线状态,如有急事请尝试其他联系方式"
         # 如果图灵Key出现问题，那么reply将会是None
         reply = tuLing.reply(msg['Text'])
         # a or b的意思是，如果a有内容，那么返回a，否则返回b
         # 有内容一般就是指非空或者非None，你可以用`if a: print('True')`来测试
-        reply = u"🤖:%s"% (reply or defaultReply)
-        return reply
-        #itchat.send(reply,msg["User"]["UserName"])
+    logger.info(u"%s face msg :[%s],reply:[%s]",msg["User"].get("NickName"),msg["Text"],reply)
+    return  u"🤖:%s"% (reply or defaultReply)
 
 @itchat.msg_register([PICTURE, RECORDING, ATTACHMENT, VIDEO])
 def download_files(msg):
@@ -109,8 +111,11 @@ def add_friend(msg):
 """
 @itchat.msg_register(TEXT, isGroupChat=True)
 def text_reply(msg):
-    if msg['isAt']:
-        itchat.send(u'@%s\u2005I received: %s' % (msg['ActualNickName'], msg['Content']), msg['FromUserName'])
+    #logger.info(json.dumps(msg).decode("unicode_escape"))
+    if msg['isAt'] and myRobot.online:
+        reply = tuLing.reply(msg['Content'])
+        logger.info(u"%s group %s msg :[%s],reply:[%s]",msg["User"].get("NickName"),msg['ActualNickName'],msg["Text"],reply)
+        itchat.send(u'@%s\u2005 🤖: %s' % (msg['ActualNickName'], reply), msg['FromUserName'])
 
 if __name__ == "__main__":
     logging.basicConfig(
