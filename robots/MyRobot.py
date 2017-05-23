@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 import json
 import re
+import sys
 
 __author__ = 'ben'
 import logging
@@ -20,12 +21,12 @@ class TuLingReply(object) :
     def __init__(self):
         super(TuLingReply, self).__init__()
 
-    def reply(self,msg):
+    def reply(self,msg,userid="wechat-robot"):
         try:
             data = {
                 'key'    : self.KEY,
                 'info'   : msg,
-                'userid' : 'wechat-robot',
+                'userid' : userid,
             }
             r = requests.post(self.apiUrl, data=data)
             # 字典的get方法在字典没有'text'值的时候会返回None而不会抛出异常
@@ -71,13 +72,21 @@ class MyReply(object):
         elif text == "up":
             logger.info("my robot is going up")
             self.online = True
-            return "success"
+            return "up success"
         elif text == "down":
             logger.info("my robot is going down")
             self.online = False
-            return "success"
+            return "down success"
+        elif text == "gp":
+            logger.info("my robot's group going up")
+            self.groupOnline = True
+            return "up success"
+        elif text == "gd":
+            logger.info("my robot's group is going down")
+            self.groupOnline = False
+            return "down success"
         else:
-            return self.tuLing.reply(msg['Text'])
+            return self.tuLing.reply(msg['Text'],msg["FromUserName"])
 
     def isMySelf(self,msg):
 
@@ -119,14 +128,16 @@ def add_friend(msg):
 def text_reply(msg):
     #logger.info(json.dumps(msg).decode("unicode_escape"))
     if msg['isAt'] and myRobot.groupOnline:
-        match = re.match("@\S+\s+?(.*)",msg['Content'])
+        match = re.match("@\S+\s+?(.*)",msg['Content'],re.U)
         temp = match.group(1) if match else msg['Content']
         logger.info(temp)
-        reply = tuLing.reply(temp)
+        reply = tuLing.reply(temp,msg["FromUserName"])
         logger.info(u"%s group %s msg :[%s],reply:[%s]",msg["User"].get("NickName"),msg['ActualNickName'],msg["Text"],reply)
         itchat.send(u'@%s\u2005 🤖: %s' % (msg['ActualNickName'], reply), msg['FromUserName'])
 
 if __name__ == "__main__":
+    reload(sys)
+    sys.setdefaultencoding('utf8')
     logging.basicConfig(
         format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
         level=logging.INFO,
@@ -136,4 +147,3 @@ if __name__ == "__main__":
     )
     itchat.auto_login(hotReload=True)
     itchat.run()
-    #itchat.set_logging(showOnCmd=True,loggingFile="robot.log",loggingLevel=logging.DEBUG)

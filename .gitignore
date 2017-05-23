@@ -14,7 +14,7 @@ m-sun/src/test/resources/com.zcloud.vtx.module.sun.eb.mongo/lib/*
 m-sun/src/test/resources/com.zcloud.vtx.module.sun.eb.mongo/mods/*
 */target
 mods/
-
+*.pkl
 
 cloud/*
 /apidoc/maxwon-apidoc/
