@@ -86,18 +86,20 @@ myRobot = MyReply()
 @itchat.msg_register([TEXT, MAP, CARD, NOTE, SHARING])
 def text_reply(msg):
     #logger.info("online %s" % myRobot.online)
-    defaultReply = u"暂时离线状态,如有急事请尝试其他联系方式"
     reply = None
     #logger.info(json.dumps(msg).decode("unicode_escape"))
     if myRobot.isMySelf(msg) :
-        reply = myRobot.reply(msg)
+        return myRobot.reply(msg)
     elif myRobot.online:
+        defaultReply = u"暂时离线状态,如有急事请尝试其他联系方式"
         # 如果图灵Key出现问题，那么reply将会是None
         reply = tuLing.reply(msg['Text'])
         # a or b的意思是，如果a有内容，那么返回a，否则返回b
         # 有内容一般就是指非空或者非None，你可以用`if a: print('True')`来测试
-    logger.info(u"%s face msg :[%s],reply:[%s]",msg["User"].get("NickName"),msg["Text"],reply)
-    return  u"🤖:%s"% (reply or defaultReply)
+        logger.info(u"%s face msg :[%s],reply:[%s]",msg["User"].get("NickName"),msg["Text"],reply)
+        return  u"🤖:%s"% (reply or defaultReply)
+    else:
+        return None
 
 @itchat.msg_register([PICTURE, RECORDING, ATTACHMENT, VIDEO])
 def download_files(msg):
