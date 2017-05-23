@@ -145,5 +145,5 @@ if __name__ == "__main__":
         filename='../logs/robot.log',
         filemode='a'
     )
-    itchat.auto_login(hotReload=True)
+    itchat.auto_login(hotReload=True,enableCmdQR=2)
     itchat.run()
