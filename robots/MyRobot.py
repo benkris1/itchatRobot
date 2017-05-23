@@ -51,7 +51,7 @@ class TuLingReply(object) :
             return
 
 class MyReply(object):
-    online =True
+    online = False
     nickName = u"当时汗就来了"
     tuLing = TuLingReply()
     def __init__(self):
