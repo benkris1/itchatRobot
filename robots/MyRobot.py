@@ -86,12 +86,12 @@ myRobot = MyReply()
 @itchat.msg_register([TEXT, MAP, CARD, NOTE, SHARING])
 def text_reply(msg):
     #logger.info("online %s" % myRobot.online)
+    defaultReply = u"暂时离线状态,如有急事请尝试其他联系方式"
     reply = None
     #logger.info(json.dumps(msg).decode("unicode_escape"))
     if myRobot.isMySelf(msg) :
         reply = myRobot.reply(msg)
     elif myRobot.online:
-        defaultReply = u"暂时离线状态,如有急事请尝试其他联系方式"
         # 如果图灵Key出现问题，那么reply将会是None
         reply = tuLing.reply(msg['Text'])
         # a or b的意思是，如果a有内容，那么返回a，否则返回b
@@ -115,7 +115,7 @@ def text_reply(msg):
     #logger.info(json.dumps(msg).decode("unicode_escape"))
     if msg['isAt'] and myRobot.online:
         match = re.match("@\S+\s+?(.*)",msg['Content'])
-        reply = tuLing.reply(match.group(0) if match else msg['Content'])
+        reply = tuLing.reply(match.group(1) if match else msg['Content'])
         logger.info(u"%s group %s msg :[%s],reply:[%s]",msg["User"].get("NickName"),msg['ActualNickName'],msg["Text"],reply)
         itchat.send(u'@%s\u2005 🤖: %s' % (msg['ActualNickName'], reply), msg['FromUserName'])
 
