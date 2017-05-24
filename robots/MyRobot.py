@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
 import json
+import os
 import re
 import sys
 
@@ -145,5 +146,6 @@ if __name__ == "__main__":
         filename='../logs/robot.log',
         filemode='a'
     )
-    itchat.auto_login(hotReload=True,enableCmdQR=2)
-    itchat.run()
+    #itchat.auto_login(hotReload=True)
+    #itchat.run()
+    #print os.path.abspath(__file__)

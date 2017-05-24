@@ -1,0 +1,2 @@
+requests==2.13.0
+itchat==1.3.6
