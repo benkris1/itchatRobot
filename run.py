@@ -14,7 +14,7 @@ logging.basicConfig(
     filemode='a'
 )
 
-itchat.auto_login(hotReload=True,enableCmdQR=2)
+itchat.auto_login(hotReload=True,enableCmdQR=2,statusStorageDir='tmp/itchat.pkl')
 itchat.run()
 
 

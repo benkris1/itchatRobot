@@ -11,6 +11,7 @@ RUN mkdir -p /opt/itchatRobot
 WORKDIR /opt/itchatRobot
 RUN mkdir logs
 ADD wheels/ wheels
+RUN mkdir tmp
 ADD requirements.txt .
 RUN pip install wheel
 RUN pip install --use-wheel --no-index --find-links=wheels -r requirements.txt
