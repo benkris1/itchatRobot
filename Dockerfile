@@ -1,5 +1,5 @@
-FROM armhf/alpine:3.5
-#FROM alpine:3.3
+#FROM armhf/alpine:3.5
+FROM alpine:3.3
 MAINTAINER cma <cma@maxleap.com>
 # Update
 RUN apk add --update python py-pip \
@@ -17,4 +17,4 @@ RUN pip install --use-wheel --no-index --find-links=wheels -r requirements.txt
 
 ADD robots robots
 ADD run.py .
-CMD ["python", "run.py"]
+ENTRYPOINT ["python", "run.py"]
