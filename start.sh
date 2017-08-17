@@ -1,3 +1,3 @@
 #!/bin/bash
 WORKING_DIR=/opt/itchatRobot
-docker run --name itchatRobot --net="host" -v $WORKING_DIR/logs:/opt/itchatRobot/logs  $WORKING_DIR/tmp:/opt/itchatRobot/tmp itchat_robot:0.1 1>robot_out.log
+docker run -P --name itchatRobot --net="host" -it -v $WORKING_DIR/logs:/opt/itchatRobot/logs  -v $WORKING_DIR/tmp:/opt/itchatRobot/tmp -d itchat_robot:0.1
