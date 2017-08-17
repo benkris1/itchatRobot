@@ -1,6 +1,6 @@
-# itchatRobot
+# itchat Robot
 
-基于itchat 实现的微信聊天机器人
+基于python 实现的微信聊天机器人
 
 
 
